@@ -9,7 +9,7 @@ On June 20, 2017, Nintendo released System Update v3.0.0 for the Nintendo Switch
 Unlike the Wii U, which handles these controllers on a 'per-game' basis, the Switch treats the Pokken controller as if it was a Switch Pro Controller. Along with having the icon for the Pro Controller, it functions just like it in terms of using it in other games, apart from the lack of physical controls such as analog sticks, the buttons for the stick clicks, or other system buttons such as Home or Capture.
 
 ### Printing Splatoon Posts
-For my own personal use, I repurposed Switch-Fightstick to output a set sequence of inputs to systematically print Splatoon posts. This works by using the smallest size pen and D-pad inputs to plot out each pixel one-by-one.
+This is a repurposed Switch-Fightstick that outputs a set sequence of inputs to systematically print Splatoon posts. This works by using the smallest size pen and D-pad inputs to plot out each pixel one-by-one.
 
 ### Printing Splatoon __3__ Posts
 From what I've gathered using the Splatoon 3 Splatfest World Premiere, the posting system remains relatively the same as in Splatoon 2, except some button changes. There's also the possibility to do vertical posts, which this program does NOT support (but maybe it will in the future...?)
