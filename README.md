@@ -11,7 +11,7 @@ Unlike the Wii U, which handles these controllers on a 'per-game' basis, the Swi
 ### Printing Splatoon Posts
 For my own personal use, I repurposed Switch-Fightstick to output a set sequence of inputs to systematically print Splatoon posts. This works by using the smallest size pen and D-pad inputs to plot out each pixel one-by-one.
 
-### Printing Splatoon **3** Posts
+### Printing Splatoon __3__ Posts
 From what I've gathered using the Splatoon 3 Splatfest World Premiere, the posting system remains relatively the same as in Splatoon 2, except some button changes. There's also the possibility to do vertical posts, which this program does NOT support (but maybe it will in the future...?)
 
 #### Printing Procedure
