@@ -12,7 +12,7 @@ Unlike the Wii U, which handles these controllers on a 'per-game' basis, the Swi
 For my own personal use, I repurposed Switch-Fightstick to output a set sequence of inputs to systematically print Splatoon posts. This works by using the smallest size pen and D-pad inputs to plot out each pixel one-by-one.
 
 ### Printing Splatoon **3** Posts
-From what I've gathered using the Splatoon 3 Splatfest World Premiere, the posting system remains relatively the same as in Splatoon 2, except some button changes now and then. There's also the possibility to do vertical posts, which this program does NOT support (but maybe it will in the future...?)
+From what I've gathered using the Splatoon 3 Splatfest World Premiere, the posting system remains relatively the same as in Splatoon 2, except some button changes. There's also the possibility to do vertical posts, which this program does NOT support (but maybe it will in the future...?)
 
 #### Printing Procedure
 Just press L to select the pixel pen and plug in the controller: it will automatically sync with the console, reset the cursor position, clean the canvas and print. In case you see issues with controller conflicts while in docked mode, try using a USB-C to USB-A adapter in handheld mode. In dock mode, changes in the HDMI connection will briefly make the Switch not respond to incoming USB commands, skipping pixels in the printout. These changes may include turning off the TV, or switching the HDMI input. (Switching to the internal tuner will be OK, if this doesn't trigger a change in the HDMI input.)
