@@ -11,7 +11,8 @@
 
 # Run "make help" for target help.
 
-MCU          = atmega16u2
+#"atmega32u4" for pro micro; "atmega16u2" for arduino uno
+MCU          = atmega32u4
 ARCH         = AVR8
 F_CPU        = 16000000
 F_USB        = $(F_CPU)

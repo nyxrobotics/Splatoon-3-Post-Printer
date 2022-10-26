@@ -82,6 +82,8 @@ void parseLine(char *line) {
 		command = STICK_MIN;
 	} else if (strcasecmp(c, "MAX") == 0) {
 		command = STICK_MAX;
+	} else if (atoi(c) > 0) {
+		command = atoi(c);
 	} else if (strcasecmp(c, "TOP") == 0) {
 		command = HAT_TOP;
 	} else if (strcasecmp(c, "TOP_RIGHT") == 0) {
