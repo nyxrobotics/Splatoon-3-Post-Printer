@@ -250,11 +250,13 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 				stabilize_count ++;
 				if (ypos % 2)
 				{
-					ReportData->HAT = HAT_LEFT;
+					ReportData->LX = STICK_MIN;
+					// ReportData->HAT = HAT_LEFT;
 				}
 				else
 				{
-					ReportData->HAT = HAT_RIGHT;
+					ReportData->LX = STICK_MAX;
+					// ReportData->HAT = HAT_RIGHT;
 				}
 			}else if(stabilize_count < 4){
 				stabilize_count ++;
@@ -288,7 +290,7 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 
 	// Inking
 	if (state != SYNC_CONTROLLER && state != SYNC_POSITION)
-		if (pgm_read_byte(&(image_data[(xpos / 8) + (ypos * 40)])) & 1 << (xpos % 8))
+		if (pgm_read_byte(&(image_data[(xpos >> 3) + (ypos * 40)])) & 1 << (xpos % 8))
 			ReportData->Button |= SWITCH_A;
 
 	// Prepare to echo this report
