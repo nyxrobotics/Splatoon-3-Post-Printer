@@ -26,7 +26,7 @@ SRC          = $(TARGET).c Descriptors.c image.c $(LUFA_SRC_USB)
 LUFA_PATH    = ../LUFA/LUFA
 CC_FLAGS     = -DUSE_LUFA_CONFIG_HEADER -IConfig/
 LD_FLAGS     =
-IMG_SRC_DEF  = splatoonpattern.png
+IMG_SRC_DEF  = wallpaper.png
 IMG_SRC     ?= post.png
 PYTHON3      = /usr/bin/env python3
 
