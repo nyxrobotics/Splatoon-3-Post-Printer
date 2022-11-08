@@ -144,6 +144,7 @@ typedef enum {
 	STOP_X,
 	STABILIZE_X,
 	STOP_Y,
+	STABILIZE_Y,
 	MOVE_X,
 	MOVE_Y,
 	DONE
@@ -245,7 +246,7 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 				state = STABILIZE_X;
 			break;
 		case STABILIZE_X:
-			if(stabilize_count < 4){
+			if(stabilize_count < 3){
 				stabilize_count ++;
 				if (ypos % 2)
 				{
@@ -255,7 +256,7 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 				{
 					ReportData->HAT = HAT_RIGHT;
 				}
-			}else if(stabilize_count < 6){
+			}else if(stabilize_count < 4){
 				stabilize_count ++;
 			}else{
 				state = STOP_Y;
@@ -266,6 +267,14 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 			ReportData->HAT = HAT_BOTTOM;
 			ypos++;
 			state = STOP_X;
+			break;
+		case STABILIZE_Y:
+			if(stabilize_count < 1){
+				stabilize_count ++;
+			}else{
+				state = STOP_X;
+				stabilize_count = 0;
+			}
 			break;
 		case DONE:
 			#ifdef ALERT_WHEN_DONE
