@@ -12,7 +12,11 @@
 # Run "make help" for target help.
 
 # Set the MCU accordingly to your device (e.g. at90usb1286 for a Teensy 2.0++, or atmega16u2 for an Arduino UNO R3)
-MCU          = at90usb1286
+MCU_TEENSY   = at90usb1286
+MCU_UNO      = atmega16u2
+MCU_MICRO    = atmega32u4
+# set the Teensy controller as default.
+MCU         ?= $(MCU_MICRO)
 ARCH         = AVR8
 F_CPU        = 16000000
 F_USB        = $(F_CPU)
@@ -22,9 +26,12 @@ SRC          = $(TARGET).c Descriptors.c image.c $(LUFA_SRC_USB)
 LUFA_PATH    = ../LUFA/LUFA
 CC_FLAGS     = -DUSE_LUFA_CONFIG_HEADER -IConfig/
 LD_FLAGS     =
+IMG_SRC_DEF  = wallpaper.png
+IMG_SRC     ?= post.png
+PYTHON3      = /usr/bin/env python3
 
 # Default target
-all:
+all: image
 
 # Include LUFA build script makefiles
 include $(LUFA_PATH)/Build/lufa_core.mk
@@ -40,3 +47,20 @@ include $(LUFA_PATH)/Build/lufa_atprogram.mk
 # Target for LED/buzzer to alert when print is done
 with-alert: all
 with-alert: CC_FLAGS += -DALERT_WHEN_DONE
+
+teensy:
+	MCU=$(MCU_TEENSY) make all
+uno:
+	MCU=$(MCU_UNO) make all
+micro:
+	MCU=$(MCU_MICRO) make all
+
+image: $(IMG_SRC)
+	$(PYTHON3) png2c.py $(IMG_SRC)
+
+$(IMG_SRC):
+	@echo "using default image source"
+	cp $(IMG_SRC_DEF) $(IMG_SRC)
+
+image-preview: $(IMG_SRC)
+	$(PYTHON3) png2c.py -p $(IMG_SRC)
