@@ -11,6 +11,7 @@
 
 # Run "make help" for target help.
 
+# Set the MCU accordingly to your device (e.g. at90usb1286 for a Teensy 2.0++, or atmega16u2 for an Arduino UNO R3)
 MCU_TEENSY   = at90usb1286
 MCU_UNO      = atmega16u2
 MCU_MICRO    = atmega32u4
