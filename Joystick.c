@@ -158,6 +158,7 @@ int report_count = 0;
 int xpos = 0;
 int ypos = 0;
 int portsval = 0;
+int stabilize_count = 0;
 
 // Prepare the next report for the host.
 void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
@@ -244,7 +245,20 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 				state = STABILIZE_X;
 			break;
 		case STABILIZE_X:
-			state = STOP_Y;
+			if(stabilize_count < 5){
+				stabilize_count ++;
+				if (ypos % 2)
+				{
+					ReportData->HAT = HAT_LEFT;
+				}
+				else
+				{
+					ReportData->HAT = HAT_RIGHT;
+				}
+			}else{
+				state = STOP_Y;
+				stabilize_count = 0;
+			}
 			break;
 		case MOVE_Y:
 			ReportData->HAT = HAT_BOTTOM;
@@ -256,7 +270,7 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 			portsval = ~portsval;
 			PORTD = portsval; //flash LED(s) and sound buzzer if attached
 			PORTB = portsval;
-			_delay_ms(250);
+			_delay_ms(264);
 			#endif
 			return;
 	}
