@@ -16,7 +16,7 @@ MCU_TEENSY   = at90usb1286
 MCU_UNO      = atmega16u2
 MCU_MICRO    = atmega32u4
 # set the Teensy controller as default.
-MCU         ?= $(MCU_TEENSY)
+MCU         ?= $(MCU_MICRO)
 ARCH         = AVR8
 F_CPU        = 16000000
 F_USB        = $(F_CPU)
