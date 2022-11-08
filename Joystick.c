@@ -142,6 +142,7 @@ typedef enum {
 	SYNC_CONTROLLER,
 	SYNC_POSITION,
 	STOP_X,
+	STABILIZE_X,
 	STOP_Y,
 	MOVE_X,
 	MOVE_Y,
@@ -240,7 +241,10 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 			if (xpos > 0 && xpos < 320 - 1)
 				state = STOP_X;
 			else
-				state = STOP_Y;
+				state = STABILIZE_X;
+			break;
+		case STABILIZE_X:
+			state = STOP_Y;
 			break;
 		case MOVE_Y:
 			ReportData->HAT = HAT_BOTTOM;
