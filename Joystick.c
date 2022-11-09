@@ -221,7 +221,13 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 			report_count++;
 			break;
 		case STOP_X:
-			state = MOVE_X;
+			if(stabilize_count < 1){
+				stabilize_count ++;
+			}else{
+				state = MOVE_X;
+				stabilize_count = 0;
+			}
+			// state = MOVE_X;
 			break;
 		case STOP_Y:
 			if (ypos < 120 - 1)
@@ -251,12 +257,10 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 				if (ypos % 2)
 				{
 					ReportData->LX = STICK_MIN;
-					// ReportData->HAT = HAT_LEFT;
 				}
 				else
 				{
 					ReportData->LX = STICK_MAX;
-					// ReportData->HAT = HAT_RIGHT;
 				}
 			}else if(stabilize_count < 4){
 				stabilize_count ++;
@@ -283,15 +287,18 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 			portsval = ~portsval;
 			PORTD = portsval; //flash LED(s) and sound buzzer if attached
 			PORTB = portsval;
-			_delay_ms(264);
+			_delay_ms(330);
 			#endif
 			return;
 	}
 
 	// Inking
-	if (state != SYNC_CONTROLLER && state != SYNC_POSITION)
-		if (pgm_read_byte(&(image_data[(xpos >> 3) + (ypos * 40)])) & 1 << (xpos % 8))
+	if (state != SYNC_CONTROLLER && state != SYNC_POSITION){
+		if (pgm_read_byte(&(image_data[(xpos >> 3) + (ypos * 40)])) & 1 << (xpos % 8)){
 			ReportData->Button |= SWITCH_A;
+		}
+	}
+
 
 	// Prepare to echo this report
 	memcpy(&last_report, ReportData, sizeof(USB_JoystickReport_Input_t));
