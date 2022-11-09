@@ -160,6 +160,8 @@ int xpos = 0;
 int ypos = 0;
 int portsval = 0;
 int stabilize_count = 0;
+int ink_status = 0;
+int prev_ink_status = 0;
 
 // Prepare the next report for the host.
 void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
@@ -230,8 +232,15 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 			// state = MOVE_X;
 			break;
 		case STOP_Y:
-			if (ypos < 120 - 1)
-				state = MOVE_Y;
+			if (ypos < 120 - 1){
+				if(stabilize_count < 1){
+					stabilize_count ++;
+				}else{
+					state = MOVE_Y;
+					stabilize_count = 0;
+				}
+				// state = MOVE_Y;
+			}
 			else
 				state = DONE;
 			break;
@@ -262,8 +271,6 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 				{
 					ReportData->LX = STICK_MAX;
 				}
-			}else if(stabilize_count < 4){
-				stabilize_count ++;
 			}else{
 				state = STOP_Y;
 				stabilize_count = 0;
@@ -287,21 +294,25 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 			portsval = ~portsval;
 			PORTD = portsval; //flash LED(s) and sound buzzer if attached
 			PORTB = portsval;
-			_delay_ms(330);
+			_delay_ms(165);
 			#endif
 			return;
 	}
 
 	// Inking
 	if (state != SYNC_CONTROLLER && state != SYNC_POSITION){
-		if (pgm_read_byte(&(image_data[(xpos >> 3) + (ypos * 40)])) & 1 << (xpos % 8)){
+		if (ink_status != prev_ink_status){
+			_delay_ms(1);
+		}
+		prev_ink_status = ink_status;
+		ink_status = pgm_read_byte(&(image_data[(xpos >> 3) + (ypos * 40)])) & 1 << (xpos % 8);
+		if (ink_status){
 			ReportData->Button |= SWITCH_A;
 		}
 	}
 
-
 	// Prepare to echo this report
 	memcpy(&last_report, ReportData, sizeof(USB_JoystickReport_Input_t));
 	echoes = ECHOES;
-
+	_delay_ms(1);
 }
