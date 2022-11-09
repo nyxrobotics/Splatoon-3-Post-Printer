@@ -181,13 +181,6 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 		echoes--;
 		return;
 	}
-	// Inking
-	if (state != SYNC_CONTROLLER && state != SYNC_POSITION){
-		ink_status = pgm_read_byte(&(image_data[(xpos >> 3) + (ypos * 40)])) & 1 << (xpos % 8);
-		if (ink_status){
-			ReportData->Button |= SWITCH_A;
-		}
-	}
 	// States and moves management
 	switch (state)
 	{
@@ -300,11 +293,18 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 			portsval = ~portsval;
 			PORTD = portsval; //flash LED(s) and sound buzzer if attached
 			PORTB = portsval;
-			_delay_ms(165);
+			// _delay_ms(165);
 			#endif
 			return;
 	}
 
+	// Inking
+	if (state != SYNC_CONTROLLER && state != SYNC_POSITION){
+		ink_status = pgm_read_byte(&(image_data[(xpos >> 3) + (ypos * 40)])) & 1 << (xpos % 8);
+		if (ink_status){
+			ReportData->Button |= SWITCH_A;
+		}
+	}
 	// Prepare to echo this report
 	memcpy(&last_report, ReportData, sizeof(USB_JoystickReport_Input_t));
 	echoes = ECHOES;
