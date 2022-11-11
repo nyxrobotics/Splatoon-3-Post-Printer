@@ -265,17 +265,21 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 				state = STABILIZE_X;
 			break;
 		case STABILIZE_X:
-			if(stabilize_count < 8){
+			if(stabilize_count < 12){
 				stabilize_count ++;
 				if (ypos % 2)
 				{
-				    ReportData->HAT = HAT_LEFT;
+				    if(stabilize_count%2){
+				        ReportData->HAT = HAT_LEFT;
+				    }
 				}
 				else
 				{
-					ReportData->HAT = HAT_RIGHT;
+				    if(stabilize_count%2){
+					    ReportData->HAT = HAT_RIGHT;
+					}
 				}
-			}else if(stabilize_count < 12){
+			}else if(stabilize_count < 16){
 				stabilize_count ++;
 			}else{
 				state = STOP_Y;
