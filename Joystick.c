@@ -96,6 +96,7 @@ void EVENT_USB_Device_ControlRequest(void) {
 	// Not used here, it looks like we don't receive control request from the Switch.
 }
 
+int port_ready = 0;
 // Process and deliver data from IN and OUT endpoints.
 void HID_Task(void) {
 	// If the device isn't connected and properly configured, we can't do anything here.
@@ -104,6 +105,7 @@ void HID_Task(void) {
 
 	// We'll start with the OUT endpoint.
 	Endpoint_SelectEndpoint(JOYSTICK_OUT_EPADDR);
+	port_ready = 0;
 	// We'll check to see if we received something on the OUT endpoint.
 	if (Endpoint_IsOUTReceived())
 	{
@@ -117,6 +119,7 @@ void HID_Task(void) {
 			// At this point, we can react to this data.
 
 			// However, since we're not doing anything with this data, we abandon it.
+			port_ready = 1;
 		}
 		// Regardless of whether we reacted to the data, we acknowledge an OUT packet on this endpoint.
 		Endpoint_ClearOUT();
@@ -162,6 +165,7 @@ int portsval = 0;
 int stabilize_count = 0;
 int ink_status = 0;
 int prev_ink_status = 0;
+int white_count = 0;
 
 // Prepare the next report for the host.
 void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
@@ -196,6 +200,7 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 			}
 			else if (report_count == 75 || report_count == 100)
 			{
+				//_delay_ms(100);
 				ReportData->Button |= SWITCH_A;
 			}
 			report_count++;
@@ -260,16 +265,18 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 				state = STABILIZE_X;
 			break;
 		case STABILIZE_X:
-			if(stabilize_count < 3){
+			if(stabilize_count < 8){
 				stabilize_count ++;
 				if (ypos % 2)
 				{
-					ReportData->LX = STICK_MIN;
+				    ReportData->HAT = HAT_LEFT;
 				}
 				else
 				{
-					ReportData->LX = STICK_MAX;
+					ReportData->HAT = HAT_RIGHT;
 				}
+			}else if(stabilize_count < 12){
+				stabilize_count ++;
 			}else{
 				state = STOP_Y;
 				stabilize_count = 0;
@@ -278,10 +285,10 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 		case MOVE_Y:
 			ReportData->HAT = HAT_BOTTOM;
 			ypos++;
-			state = STOP_X;
+			state = STABILIZE_Y;
 			break;
 		case STABILIZE_Y:
-			if(stabilize_count < 1){
+			if(stabilize_count < 4){
 				stabilize_count ++;
 			}else{
 				state = STOP_X;
@@ -293,7 +300,7 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 			portsval = ~portsval;
 			PORTD = portsval; //flash LED(s) and sound buzzer if attached
 			PORTB = portsval;
-			// _delay_ms(165);
+			_delay_ms(250);
 			#endif
 			return;
 	}
@@ -303,7 +310,16 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 		ink_status = pgm_read_byte(&(image_data[(xpos >> 3) + (ypos * 40)])) & 1 << (xpos % 8);
 		if (ink_status){
 			ReportData->Button |= SWITCH_A;
+			white_count = 0;
 		}
+		// else
+		// {
+		// 	white_count ++;
+		// }
+		// if(white_count == 160){
+		// 	ReportData->Button |= SWITCH_B;
+		// 	white_count = 0;
+		// }
 	}
 	// Prepare to echo this report
 	memcpy(&last_report, ReportData, sizeof(USB_JoystickReport_Input_t));
